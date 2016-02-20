@@ -21,7 +21,7 @@ class AndyPi_LCD:
   LCD_D5 = 24
   LCD_D6 = 23
   LCD_D7 = 14
-  LCD_LED = 18
+  LCD_LED = 15
 
   # Define constants
   LCD_WIDTH = 16    # Maximum characters per line
@@ -34,8 +34,7 @@ class AndyPi_LCD:
   E_PULSE = 0.00005
   E_DELAY = 0.00005
   
-  # import wiringpi class
-  import wiringpi
+
   #  import GPIO class
   import RPi.GPIO as GPIO
 
@@ -48,13 +47,13 @@ class AndyPi_LCD:
   GPIO.setup(LCD_D5, GPIO.OUT) # DB5
   GPIO.setup(LCD_D6, GPIO.OUT) # DB6
   GPIO.setup(LCD_D7, GPIO.OUT) # DB7
-  wiringpi.wiringPiSetupSys() # was .wiringPiSetupGpio()
+  GPIO.setup(LCD_LED, GPIO.OUT) # DB7
 
   	
   def main(self):
     # Send a test text
     self.lcd_init()
-    self.led(512)
+    self.led(1)
     self.scroll_clock(1,"c",0.5,"AndyPi LCD Test Message")
 
   def lcd_init(self):
@@ -136,10 +135,9 @@ class AndyPi_LCD:
 
   def led(self,led_value):
     if led_value==0:
-      self.wiringpi.pinMode(self.LCD_LED, 1) # turn off LED
+      self.GPIO.output(self.LCD_LED, False) # turn off LED
     else:   
-      self.wiringpi.pinMode(self.LCD_LED, 2) # LED set up as PWM
-      self.wiringpi.pwmWrite(self.LCD_LED, led_value)
+      self.GPIO.output(self.LCD_LED, True) # turn on LED
 
   def lcd_byte(self,bits, mode):
     # Send byte to data pins

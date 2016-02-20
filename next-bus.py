@@ -39,7 +39,8 @@ def fetchBusArrivals(bSC):
 
 if __name__ == '__main__':
     
-	#lcd.cls()
+	lcd.cls()
+	lcd.led(1)
 	location="LEWISHAM HOSPITAL"
 	lcd.static_text(1,"l","From: ")
 	lcd.static_text(2,"l",location)
@@ -54,9 +55,6 @@ if __name__ == '__main__':
 			bus_destination=bus[1]
 			bus_mins_to_arrival= "in %.0f minutes" % (bus[2])
 			line1=bus_no + " to " + bus_destination
-		 	#tickerInfo = '%s to %s \nin %.0f minutes' % (bus[0], bus[1], bus[2])
-			#print tickerInfo
-			lcd.cls()
 			lcd.static_text(2,"l",bus_mins_to_arrival)
 			lcd.static_text(1,"l",line1)
 			time.sleep(1)
