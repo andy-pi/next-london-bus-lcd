@@ -1,5 +1,5 @@
 # Next London Bus LCD
-Use the TfL API to get details of the next buses arriving at your London location, and display it on your AndyPi HD44780 LCD
+Use the TfL API to get details of the next buses arriving at your London location, and display it on your AndyPi HD44780 LCD. Based on work here: https://github.com/ismailuddin/raspberrypi/blob/master/tfl-bus-ticker/TfLAPI.py
 
 ## Todo
 Since it was a few years ago I wrote the AndyPi_LCD class, and the GPIO functions have been update
