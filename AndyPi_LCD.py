@@ -6,7 +6,8 @@
 # Based on work by Raspi Forum Members: Matt Hawkins + Texy
 #
 # Date : 27/03/2013
-#
+# Version 1.1 (changed wiringpi setup to Sys not Gpio
+
 
 import time
 from datetime import datetime
@@ -47,7 +48,7 @@ class AndyPi_LCD:
   GPIO.setup(LCD_D5, GPIO.OUT) # DB5
   GPIO.setup(LCD_D6, GPIO.OUT) # DB6
   GPIO.setup(LCD_D7, GPIO.OUT) # DB7
-  wiringpi.wiringPiSetupGpio()
+  wiringpi.wiringPiSetupSys() # was .wiringPiSetupGpio()
 
   	
   def main(self):

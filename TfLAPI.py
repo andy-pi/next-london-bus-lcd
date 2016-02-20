@@ -1,10 +1,10 @@
 # Module taken from Public GitHub Repo by ismailuddin
 # https://github.com/ismailuddin/raspberrypi/blob/master/tfl-bus-ticker/TfLAPI.py
-# www.scienceexposure.com
+# http://www.scienceexposure.com/raspberry-pi/build-london-bus-ticker-using-raspberry-pi/
 #
 # Edited by:	AndyPi
 # Version:		1.1
-# Changes:		searchBusStop now returns Dictionary rather than printing
+# Changes:		searchBusStop now returns Dictionary rather than printing; also search CSV file for Naptan ID
 
 import csv
 import urllib2
