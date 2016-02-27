@@ -1,82 +1,74 @@
 #!/usr/bin/python
 #
 # HD44780 LCD Class for Raspberry Pi
-#
-# Developed by: AndyPi (http://andypi.co.uk/)
-# Based on work by Raspi Forum Members: Matt Hawkins + Texy
-#
-# Date : 27/03/2013
-# Version 1.1 (changed wiringpi setup to Sys not Gpio
+# Developed by: AndyPi (http://andypi.co.uk/) Based on work by Raspi 
+# Forum Members: Matt Hawkins + Texy
+# Title:	AndyPi_LCD
+# Date:		27/02/2016
+# version:	1.1
+# changes:	wiriing pi removed - light PWN control not working on B+
 
-
-import time
+import time 
 from datetime import datetime
 
 class AndyPi_LCD:
-
   # Define GPIO to LCD mapping
   LCD_RS = 7
-  LCD_E  = 8
+  LCD_E = 8
   LCD_D4 = 25
   LCD_D5 = 24
   LCD_D6 = 23
   LCD_D7 = 14
   LCD_LED = 15
-
   # Define constants
-  LCD_WIDTH = 16    # Maximum characters per line
+  LCD_WIDTH = 16 # Maximum characters per line
   LCD_CHR = True
   LCD_CMD = False
   LCD_LINE_1 = 0x80 # LCD memory address for the 1st line
-  LCD_LINE_2 = 0xC0 # LCD memory address for the 2nd line 
-
+  LCD_LINE_2 = 0xC0 # LCD memory address for the 2nd line
   # Timing constants
   E_PULSE = 0.00005
   E_DELAY = 0.00005
   
 
-  #  import GPIO class
   import RPi.GPIO as GPIO
-
-  # Setup GPIO 
-  GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
+  # Setup GPIO
+  GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
   GPIO.setwarnings(False)
-  GPIO.setup(LCD_E, GPIO.OUT)  # E
+  GPIO.setup(LCD_E, GPIO.OUT) # E
   GPIO.setup(LCD_RS, GPIO.OUT) # RS
   GPIO.setup(LCD_D4, GPIO.OUT) # DB4
   GPIO.setup(LCD_D5, GPIO.OUT) # DB5
   GPIO.setup(LCD_D6, GPIO.OUT) # DB6
   GPIO.setup(LCD_D7, GPIO.OUT) # DB7
-  GPIO.setup(LCD_LED, GPIO.OUT) # DB7
+  GPIO.setup(LCD_LED, GPIO.OUT) # LED
 
   	
   def main(self):
     # Send a test text
     self.lcd_init()
     self.led(1)
+    self.scroll(1,0.5,"test")
+    self.led(0)
     self.scroll_clock(1,"c",0.5,"AndyPi LCD Test Message")
 
   def lcd_init(self):
     # Initialise display
-    self.lcd_byte(0x33,self.LCD_CMD)  # init
-    self.lcd_byte(0x32,self.LCD_CMD)  # init
-    self.lcd_byte(0x28,self.LCD_CMD)  # 2 line 5x7 matrix
-    self.lcd_byte(0x0C,self.LCD_CMD)  # turn cursor off (0x0E to enable)
-    self.lcd_byte(0x06,self.LCD_CMD)  # move cursor right
-    self.lcd_byte(0x01,self.LCD_CMD)  # clear display
-
+    self.lcd_byte(0x33,self.LCD_CMD) # init
+    self.lcd_byte(0x32,self.LCD_CMD) # init
+    self.lcd_byte(0x28,self.LCD_CMD) # 2 line 5x7 matrix
+    self.lcd_byte(0x0C,self.LCD_CMD) # turn cursor off (0x0E to enable)
+    self.lcd_byte(0x06,self.LCD_CMD) # move cursor right
+    self.lcd_byte(0x01,self.LCD_CMD) # clear display
   def cls(self):
-    self.lcd_byte(0x01,self.LCD_CMD)  # clear display
+    self.lcd_byte(0x01,self.LCD_CMD) # clear display
     self.led(0) # turn off backlight
-
   def static_text(self,line,just,message):
     # set justification
     if just=="l":
       message = message.ljust(self.LCD_WIDTH," ")
-
     elif just=="r":
       message = message.rjust(self.LCD_WIDTH," ")
-
     elif just=="c":
       message = message.center(self.LCD_WIDTH," ")
     
@@ -91,7 +83,7 @@ class AndyPi_LCD:
     
   def scroll(self,line,s, scrollmsg):
     # scroll display
-    scrollmsg = (scrollmsg+"   |   ") * 200
+    scrollmsg = (scrollmsg+" | ") * 200
     z=0
     try:
       while z < len(scrollmsg):
@@ -114,10 +106,9 @@ class AndyPi_LCD:
     except KeyboardInterrupt:
         self.cls()
 
-
   def scroll_clock(self,line,just,s, scrollmsg1):
     # scroll display
-    scrollmsg1 = (scrollmsg1+"   |   ") * 200
+    scrollmsg1 = (scrollmsg1+" | ") * 200
     z=0
     if line==1:line_2=2
     elif line==2:line_2=1
@@ -132,21 +123,18 @@ class AndyPi_LCD:
           z=0
     except KeyboardInterrupt:
       self.cls()
-
   def led(self,led_value):
-    if led_value==0:
-      self.GPIO.output(self.LCD_LED, False) # turn off LED
-    else:   
-      self.GPIO.output(self.LCD_LED, True) # turn on LED
+    if (led_value==0):
+        self.GPIO.output(self.LCD_LED, False) # turn off LED
+
+    else:
+        self.GPIO.output(self.LCD_LED, True) # turn on LED
+
 
   def lcd_byte(self,bits, mode):
-    # Send byte to data pins
-    # bits = data
-    # mode = True  for character
-    #        False for command
-
+    # Send byte to data pins bits = data mode = True for character
+    # False for command
     self.GPIO.output(self.LCD_RS, mode) # RS
-
     # High bits
     self.GPIO.output(self.LCD_D4, False)
     self.GPIO.output(self.LCD_D5, False)
@@ -160,14 +148,12 @@ class AndyPi_LCD:
       self.GPIO.output(self.LCD_D6, True)
     if bits&0x80==0x80:
       self.GPIO.output(self.LCD_D7, True)
-
     # Toggle 'Enable' pin
-    time.sleep(self.E_DELAY)    
-    self.GPIO.output(self.LCD_E, True)  
+    time.sleep(self.E_DELAY)
+    self.GPIO.output(self.LCD_E, True)
     time.sleep(self.E_PULSE)
-    self.GPIO.output(self.LCD_E, False)  
-    time.sleep(self.E_DELAY)      
-
+    self.GPIO.output(self.LCD_E, False)
+    time.sleep(self.E_DELAY)
     # Low bits
     self.GPIO.output(self.LCD_D4, False)
     self.GPIO.output(self.LCD_D5, False)
@@ -181,13 +167,12 @@ class AndyPi_LCD:
       self.GPIO.output(self.LCD_D6, True)
     if bits&0x08==0x08:
       self.GPIO.output(self.LCD_D7, True)
-
     # Toggle 'Enable' pin
-    time.sleep(self.E_DELAY)    
-    self.GPIO.output(self.LCD_E, True)  
+    time.sleep(self.E_DELAY)
+    self.GPIO.output(self.LCD_E, True)
     time.sleep(self.E_PULSE)
-    self.GPIO.output(self.LCD_E, False)  
-    time.sleep(self.E_DELAY)   
+    self.GPIO.output(self.LCD_E, False)
+    time.sleep(self.E_DELAY)
 
 if __name__ == '__main__':
   lcd=AndyPi_LCD()

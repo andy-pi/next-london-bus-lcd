@@ -4,7 +4,7 @@
 #
 # Edited by:	AndyPi
 # Version:		1.1
-# Changes:		searchBusStop now returns Dictionary rather than printing; also search CSV file for Naptan ID
+# Changes:		searchBusStop now returns Dictionary rather than printing
 
 import csv
 import urllib2
@@ -20,10 +20,10 @@ class TfLBusArrivalsAPI:
 		# row[3]     Stop name
 
 		with open('data/tfl-bus-stops.csv') as csvfile:
-		    reader = csv.reader(csvfile,delimiter=',')
-		    for row in reader:
-		        self.naptanDict[row[3]] = str(row[1])
-		        self.busStopDict[row[1]] = str(row[2])
+			reader = csv.reader(csvfile,delimiter=',')
+			for row in reader:
+		        	self.naptanDict[row[3]] = str(row[1]) # edited
+		        	self.busStopDict[row[1]] = str(row[2])
 
 	def searchBusStop(self, queryString):
 		"""
@@ -52,7 +52,7 @@ class TfLBusArrivalsAPI:
 		  
 
 		for busStopName, naptanID in outputList.items():
-		  #print("%s, %s" % (busStopName, naptanID))
+		  # previously: print("%s, %s" % (busStopName, naptanID))
 		  return outputList #busStopName, naptanID
 
 	def returnTfLJSON(self, **kwargs):

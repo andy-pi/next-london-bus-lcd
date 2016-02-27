@@ -3,7 +3,8 @@ Use the TfL API to get details of the next buses arriving at your London locatio
 
 ## Hardware
 Raspberry Pi (tested on v1 B+)
-AndyPi LCD (connection as per: http://andypi.co.uk/?p=300) or compatible HD44780 LCD
+AndyPi LCD or compatible HD44780 LCD - direct conneciton NOT i2c
+(See AndyPi_LCD.py for which lcd pins connect with which RPi pins)
 
 ## Installation (test on Raspberry Pi 1 B+)
 Grab the repo and install
